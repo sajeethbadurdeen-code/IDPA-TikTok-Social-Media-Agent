@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDPA TikTok Agent</title>
+<style>
+  :root { --gold: #d4af37; --black: #0d0d0d; }
+  body { background: var(--black); color: #f5f5f5; font-family: -apple-system, sans-serif; margin: 0; padding: 24px; }
+  h1 { color: var(--gold); font-size: 22px; margin-bottom: 4px; }
+  p.sub { color: #999; font-size: 13px; margin-top: 0; }
+  .card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 20px; margin-top: 20px; }
+  label { display: block; font-size: 13px; color: var(--gold); margin-bottom: 6px; margin-top: 14px; }
+  select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #111; color: #fff; box-sizing: border-box; }
+  button { width: 100%; margin-top: 20px; padding: 14px; border-radius: 8px; border: none; background: var(--gold); color: #000; font-weight: bold; font-size: 15px; cursor: pointer; }
+  button:disabled { background: #666; }
+  #log { margin-top: 16px; background: #111; border-radius: 8px; padding: 12px; font-size: 12px; font-family: monospace; white-space: pre-wrap; max-height: 240px; overflow-y: auto; }
+  #result { margin-top: 16px; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; margin-right: 6px; }
+  .badge.ok { background: #1e4d2b; color: #7cffa0; }
+  .badge.fail { background: #4d1e1e; color: #ff7c7c; }
+</style>
+</head>
+<body>
+
+<h1>🎬 IDPA TikTok Agent</h1>
+<p class="sub">Interior Design Practical Academy — automated content pipeline</p>
+
+<div class="card">
+  <label for="password">Dashboard password</label>
+  <input id="password" type="password" placeholder="Enter password" />
+
+  <label for="theme">Content theme</label>
+  <select id="theme">
+    <option value="course-spotlight">Course Spotlight (test this first)</option>
+    <option value="before-after">Before &amp; After</option>
+    <option value="student-work">Student Work Showcase</option>
+    <option value="trainer-tip">Trainer Tip</option>
+  </select>
+
+  <label for="mediaType">Media type</label>
+  <select id="mediaType">
+    <option value="video">Video (posts to TikTok)</option>
+    <option value="image">Image only (no post)</option>
+  </select>
+
+  <button id="runBtn">🚀 Auto-Generate & Post to TikTok</button>
+
+  <div id="log"></div>
+  <div id="result"></div>
+</div>
+
+<script>
+const runBtn = document.getElementById('runBtn');
+const logBox = document.getElementById('log');
+const resultBox = document.getElementById('result');
+
+runBtn.addEventListener('click', async () => {
+  const password = document.getElementById('password').value;
+  const themeKey = document.getElementById('theme').value;
+  const mediaType = document.getElementById('mediaType').value;
+
+  runBtn.disabled = true;
+  runBtn.textContent = 'Running pipeline...';
+  logBox.textContent = 'Starting...';
+  resultBox.innerHTML = '';
+
+  try {
+    const res = await fetch('/api/generate-and-post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-dashboard-password': password
+      },
+      body: JSON.stringify({ themeKey, mediaType })
+    });
+    const data = await res.json();
+
+    logBox.textContent = (data.logLines || []).join('\n');
+
+    if (data.success) {
+      resultBox.innerHTML = `
+        <span class="badge ok">SUCCESS</span>
+        <p><b>Theme:</b> ${data.theme}</p>
+        <p><b>Caption:</b><br>${(data.caption || '').replace(/\n/g, '<br>')}</p>
+        <p><b>Media:</b> <a href="${data.mediaUrl}" target="_blank" style="color:#d4af37">View file</a></p>
+        <p><b>Publish result:</b> ${data.publishResult?.note || 'n/a'}</p>
+      `;
+    } else {
+      resultBox.innerHTML = `<span class="badge fail">FAILED</span><p>${data.error}</p>`;
+    }
+  } catch (err) {
+    resultBox.innerHTML = `<span class="badge fail">ERROR</span><p>${err.message}</p>`;
+  } finally {
+    runBtn.disabled = false;
+    runBtn.textContent = '🚀 Auto-Generate & Post to TikTok';
+  }
+});
+</script>
+
+</body>
+</html>

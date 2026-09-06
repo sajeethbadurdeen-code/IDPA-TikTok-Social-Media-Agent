@@ -1,5 +1,5 @@
-# IDPA-TikTok-Social-Media-Agent
-Automation 
+# IDPA TikTok Social Media Agent
+
 Automated content generation and publishing pipeline for Interior Design Practical Academy's TikTok.
 
 **Pipeline:** Firecrawl trend research → theme selection → NVIDIA NIM image/video generation → Claude caption writing → Supabase Storage upload → TikTok Content Posting API v2 publish.
@@ -21,11 +21,10 @@ Fill these in — see `.env.example` for the full list:
 
 ### 3. Connect Railway to your GitHub repo
 1. Open railway.com in Safari, log in
-2. 
-3. New Project → Deploy from GitHub repo → select your repo
-4. Railway auto-detects the `Procfile` and Node engine — no extra config needed
-5. Go to your service → Variables tab → add every key from `.env.example` with your real values
-6. Railway will build and deploy automatically. Once live, open the generated `.up.railway.app` URL in Safari — that's your dashboard.
+2. New Project → Deploy from GitHub repo → select your repo
+3. Railway auto-detects the `Procfile` and Node engine — no extra config needed
+4. Go to your service → Variables tab → add every key from `.env.example` with your real values
+5. Railway will build and deploy automatically. Once live, open the generated `.up.railway.app` URL in Safari — that's your dashboard.
 
 ### 4. Test it
 1. Open the dashboard URL, enter your `DASHBOARD_PASSWORD`

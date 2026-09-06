@@ -1,0 +1,19 @@
+{
+  "name": "idpa-tiktok-agent",
+  "version": "1.0.0",
+  "description": "Automated content generation and publishing agent for Interior Design Practical Academy's TikTok",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0",
+    "dotenv": "^16.4.5",
+    "@supabase/supabase-js": "^2.45.4",
+    "form-data": "^4.0.0"
+  }
+}
